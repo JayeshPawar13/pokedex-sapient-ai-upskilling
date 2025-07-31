@@ -91,9 +91,9 @@ export interface PokemonType {
 
 export const getBackground = (pokemonTypes: PokemonType[]) => {
     let color = "";
-    if (pokemonTypes.length) {
+    if (pokemonTypes?.length) {
         const { type: { name: pokemontype1 } } = pokemonTypes[0];
-        if (pokemonTypes.length > 1) {
+        if (pokemonTypes?.length > 1) {
             const { type: { name: pokemontype2 } } = pokemonTypes[1];
             color = `linear-gradient(180deg, ${getPokcolor(pokemontype1)} 0%, ${getPokcolor(pokemontype2)} 100%)`;
         } else {

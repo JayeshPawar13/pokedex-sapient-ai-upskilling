@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^14.2.2",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^30.0.0",
@@ -63,21 +63,26 @@
     ]
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^7.6.0",
+    "@storybook/addon-docs": "^9.0.18",
+    "@storybook/addon-essentials": "^7.6.0",
+    "@storybook/addon-interactions": "^7.6.0",
+    "@storybook/addon-links": "^7.6.0",
+    "@storybook/addon-onboarding": "^9.0.18",
+    "@storybook/preset-create-react-app": "^9.0.18",
+    "@storybook/react": "^7.6.20",
+    "@storybook/react-webpack5": "^9.0.18",
+    "@storybook/testing-library": "^0.2.2",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "babel-plugin-named-exports-order": "^0.0.2",
     "eslint": "^8.56.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.35.1",
+    "eslint-plugin-storybook": "^9.0.18",
     "eslint-plugin-testing-library": "^6.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.1",
-    
     "prop-types": "^15.8.1",
-    "webpack": "^5.91.0",
-    "@storybook/react": "^7.6.0",
-    "@storybook/addon-actions": "^7.6.0",
-    "@storybook/addon-essentials": "^7.6.0",
-    "@storybook/addon-interactions": "^7.6.0",
-    "@storybook/addon-links": "^7.6.0",
-    "@storybook/testing-library": "^0.2.2"
+    "storybook": "^9.0.18",
+    "webpack": "^5.91.0"
   }
 }
