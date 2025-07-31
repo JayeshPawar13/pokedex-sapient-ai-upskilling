@@ -20,7 +20,7 @@ function App() {
   // Example props for DetailPage
   const detailPageProps: DetailPageProps = {
     isCardSelected: false,
-    toggleModal: () => console.log('Toggle Modal'),
+    toggleModal: () => null,
     pokemonId: 1,
     offset: 0, // Corrected property name
   };
