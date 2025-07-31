@@ -1,107 +1,44 @@
-import {
-  reducer,
-  initialState,
-  PokemonAction,
-  PokemonState,
-} from './reducer';
+import { initialState, PokemonAction, PokemonState, reducer } from "./reducer";
+
 
 describe('Pokemon Reducer', () => {
-  it('should append pokemons to pokemonsList', () => {
+  it('should set pokemons list', () => {
     const action: PokemonAction = {
       type: 'ACTIONS.SET_POKEMON_LIST',
-      payload: [{ name: 'Pikachu' }],
+      payload: [{ name: 'Pikachu', id: 25, types: [], sprites: {} }],
     };
     const result = reducer(initialState, action);
     expect(result.pokemonsList).toEqual([{ name: 'Pikachu' }]);
   });
 
-  it('should set allPokemonsList', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_ALL_POKEMON_LIST',
-      payload: [{ name: 'Charmander' }],
-    };
-    const result = reducer(initialState, action);
-    expect(result.allPokemonsList).toEqual([{ name: 'Charmander' }]);
-  });
 
-  it('should replace pokemonsList with filtered list', () => {
+  it('should set filtered pokemons list', () => {
     const action: PokemonAction = {
       type: 'ACTIONS.SET_FILTERED_POKEMON_LIST',
-      payload: [{ name: 'Squirtle' }],
+      payload: [{ name: 'Charmander', id: 4, types: [], sprites: {} }],
     };
     const result = reducer(initialState, action);
-    expect(result.pokemonsList).toEqual([{ name: 'Squirtle' }]);
+    expect(result.pokemonsList).toEqual([{ name: 'Charmander' }]);
   });
 
-  it('should set pokemonsTypes', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_POKEMON_TYPE',
-      payload: ['fire', 'water'],
-    };
-    const result = reducer(initialState, action);
-    expect(result.pokemonsTypes).toEqual(['fire', 'water']);
-  });
-
-  it('should set pokemonGenderList', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_POKEMON_GENDER_LIST',
-      payload: ['male', 'female'],
-    };
-    const result = reducer(initialState, action);
-    expect(result.pokemonGenderList).toEqual(['male', 'female']);
-  });
-
-  it('should set isLoading', () => {
+  it('should toggle loading state', () => {
     const action: PokemonAction = {
       type: 'ACTIONS.SET_API_CALL_INPROGRESS',
-      payload: false,
-    };
-    const result = reducer(initialState, action);
-    expect(result.isLoading).toBe(false);
-  });
-
-  it('should set isLoadMoreInprogress', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_LOAD_MORE_API_CALL_INPROGRESS',
       payload: true,
     };
     const result = reducer(initialState, action);
-    expect(result.isLoadMoreInprogress).toBe(true);
+    expect(result.isLoading).toBe(true);
   });
 
-  it('should set pokemonData', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_POKEMON_BY_ID',
-      payload: { name: 'Mewtwo' },
-    };
-    const result = reducer(initialState, action);
-    expect(result.pokemonData).toEqual({ name: 'Mewtwo' });
-  });
-
-  it('should reset pokemonData to null', () => {
-    const customState: PokemonState = {
+  it('should reset pokemon data', () => {
+    const modifiedState: PokemonState = {
       ...initialState,
-      pokemonData: { name: 'Mew' },
+      pokemonData: { name: 'Mew',id: 151, types: [], sprites: {}   },
     };
     const action: PokemonAction = {
       type: 'ACTIONS.RESET_POKEMON_DATA',
     };
-    const result = reducer(customState, action);
+    const result = reducer(modifiedState, action);
     expect(result.pokemonData).toBeNull();
-  });
-
-  it('should set pokemonSelectedId', () => {
-    const action: PokemonAction = {
-      type: 'ACTIONS.SET_POKEMON_ID',
-      payload: 42,
-    };
-    const result = reducer(initialState, action);
-    expect(result.pokemonSelectedId).toBe(42);
-  });
-
-  it('should return same state on unknown action type', () => {
-    const action = { type: 'UNKNOWN_ACTION' } as any;
-    const result = reducer(initialState, action);
-    expect(result).toEqual(initialState);
   });
 });

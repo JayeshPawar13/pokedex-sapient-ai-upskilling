@@ -25,7 +25,7 @@ interface DamageRelation {
   name: ColorfulTagProps['type'];
 }
 
-interface PokemonTypeData {
+export interface PokemonTypeData {
   damage_relations?: {
     double_damage_from?: DamageRelation[];
   };

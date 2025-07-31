@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import PokemonContext from '../../context/pokemonContext/pokemon.context';
+import PokemonContext, { PokemonContextType } from '../../context/pokemonContext/pokemon.context';
 import HomePage from './home.page';
 
 // Mocks
@@ -10,24 +10,31 @@ const mockPokemonList = [
   { id: 2, name: 'ivysaur', sprites: {}, types: [] },
 ];
 
-const mockContext = {
+const mockContextValue: Partial<PokemonContextType> = {
   state: {
-    pokemonsList: mockPokemonList,
-    allPokemonsList: [],           // Add empty array or mock data
-    pokemonSelectedId: null,       // or a number if needed
-    pokemonData: {},               // or null or appropriate initial value
-    pokemonsTypes: [],             // empty array or mock types
-    pokemonGenderList: [],         // empty array or mock data
+    pokemonsList: [],
+    allPokemonsList: [],
+    pokemonSelectedId: null,
+    pokemonData: {
+      id: 1,
+      name: 'bulbasaur',
+      types: [{ type: { name: 'grass' } }],
+      sprites: {},
+      // add all required fields of PokemonCardData
+    },
+    pokemonsTypes: [],
+    pokemonGenderList: [],
     isLoading: false,
-    isLoadMoreInprogress: false,
+    isLoadMoreInprogress: false
   },
-  getPokemonData: mockGetPokemonData,
+  getPokemonData: jest.fn(),
 };
+
 
 
 const renderHomePage = () => {
   render(
-    <PokemonContext.Provider value={mockContext}>
+    <PokemonContext.Provider value={mockContextValue}>
       <HomePage />
     </PokemonContext.Provider>
   );

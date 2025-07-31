@@ -1,5 +1,4 @@
 // __tests__/propertyCard.test.tsx
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import PropertyCard from './propertyCard';
 
@@ -18,8 +17,8 @@ describe('PropertyCard', () => {
                 { ability: { name: 'chlorophyll' } },
             ],
             types: [
-                { type: { name: 'grass' } },
-                { type: { name: 'poison' } },
+                { type: { name: 'grass' as const } },
+                { type: { name: 'poison' as const } },
             ],
         },
         speciesData: {
@@ -31,13 +30,12 @@ describe('PropertyCard', () => {
         pokemonTypeData: {
             damage_relations: {
                 double_damage_from: [
-                    { name: 'fire' },
-                    { name: 'ice' },
+                    { name: 'fire' as const },
+                    { name: 'ice' as const },
                 ],
             },
         },
     };
-
     it('renders height and weight correctly', () => {
         render(<PropertyCard {...mockProps} />);
         expect(screen).toBeDefined();

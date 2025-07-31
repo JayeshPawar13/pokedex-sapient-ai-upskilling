@@ -22,7 +22,7 @@ describe('PokemonCard Component', () => {
   it('renders the dream_world image if available', () => {
     render(<PokemonCard data={mockData} />);
     const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', mockData.sprites.other?.dream_world?.front_default);
+    expect(img).toHaveAttribute('src', mockData.sprites?.other?.dream_world?.front_default);
   });
 
   it('calls onClick handler when clicked', () => {

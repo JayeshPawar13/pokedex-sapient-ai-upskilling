@@ -20,13 +20,14 @@ const mockData = {
   ],
   types: [
     {
-      type: { name: 'grass' },
+      type: { name: 'grass' as const },
     },
     {
-      type: { name: 'poison' },
+      type: { name: 'poison' as const },
     },
   ],
 };
+
 
 const mockSpeciesData = {
   egg_groups: [
@@ -38,13 +39,14 @@ const mockSpeciesData = {
 const mockPokemonTypeData = {
   damage_relations: {
     double_damage_from: [
-      { name: 'fire' },
-      { name: 'ice' },
-      { name: 'flying' },
-      { name: 'psychic' },
+      { name: 'fire' as const },
+      { name: 'ice' as const },
+      { name: 'flying' as const },
+      { name: 'psychic' as const },
     ],
   },
 };
+
 
 export const Default: Story = {
   args: {

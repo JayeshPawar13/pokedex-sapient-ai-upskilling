@@ -2,27 +2,29 @@ import React, { useContext, useMemo, useState } from 'react';
 import Header from '../../components/header/header';
 import './home.scss';
 import '../../styles/common.scss';
-import PokemonCard from '../../components/pokemonCard/pokemonCard';
+import PokemonCard, { PokemonCardData } from '../../components/pokemonCard/pokemonCard';
 import Apploader from '../../components/loader/loader';
 import PokemonContext from '../../context/pokemonContext/pokemon.context';
 import DetailPage from '../details/details.page';
 import { Button, Col, Row } from 'rsuite';
 import AppFilter from '../../components/filter/filter';
-import { PokemonState } from '../../store/reducers/reducer';
 
-// Types for Pokémon data
-interface Pokemon {
-  id: number;
-  name: string;
-  [key: string]: any; // For flexibility — replace with strict type if available
+// Define context shape
+interface PokemonContextType {
+  state: {
+    pokemonsList: PokemonCardData[];
+    isLoading: boolean;
+    isLoadMoreInprogress: boolean;
+  };
+  getPokemonData: () => void;
 }
 
 const HomePage: React.FC = () => {
-  const [isCardSelected, setToggleSelect] = useState<boolean>(false);
-  const [pokemonId, setPokemonId] = useState<number | undefined>();
-  const [isFilterEnable, setIsFilterEnable] = useState<boolean>(false);
+  const [isCardSelected, setToggleSelect] = useState(false);
+  const [pokemonId, setPokemonId] = useState<number>();
+  const [isFilterEnable, setIsFilterEnable] = useState(false);
 
-  const { state, getPokemonData } = useContext<any>(PokemonContext);
+  const { state, getPokemonData } = useContext(PokemonContext) as PokemonContextType;
   const { pokemonsList, isLoading, isLoadMoreInprogress } = state;
 
   const pokemonsListView = useMemo(() => {
@@ -31,7 +33,7 @@ const HomePage: React.FC = () => {
         index === self.findIndex((p) => p.id === pokemon.id)
     );
 
-    return uniquePokemons?.map((data) => (
+    return uniquePokemons.map((data) => (
       <div key={data.id} className="responsive">
         <PokemonCard
           data={data}
@@ -50,7 +52,6 @@ const HomePage: React.FC = () => {
 
   const toggleModal = () => {
     setToggleSelect((prev) => !prev);
-
   };
 
   const isFilterEnableHandler = (isEnable: boolean) => {
@@ -68,7 +69,7 @@ const HomePage: React.FC = () => {
               </div>
             </Col>
             <Col xs={12} sm={12} lg={2} xl={2} className="hide">
-              <div className="header-horizontal-line"></div>
+              <div className="header-horizontal-line" />
             </Col>
             <Col xs={24} sm={24} lg={20} xl={20}>
               <div className="subheading">
@@ -97,7 +98,7 @@ const HomePage: React.FC = () => {
         </div>
       )}
 
-      {!pokemonsList.length && (
+      {pokemonsList.length === 0 && !isLoading && (
         <div className="no-data-found">
           <span>No data found</span>
         </div>

@@ -7,12 +7,15 @@ import {
   getSpeciesDataById
 } from '../../services/common.service';
 import DetailsHeader from '../../components/pokemonDetailsCard/detailsHeader/detailsHeader';
-import PropertyCard from '../../components/pokemonDetailsCard/propertyCard/propertyCard';
+import PropertyCard, { PokemonTypeData } from '../../components/pokemonDetailsCard/propertyCard/propertyCard';
 import StatCard from '../../components/pokemonDetailsCard/statCard/statCard';
 import EvolutionChainCard from '../../components/pokemonDetailsCard/evolutionChainCard/evolutionChainCard';
 import { PokemonCardData } from '../../components/pokemonCard/pokemonCard';
+import { ColorfulTagProps } from '../../components/pokemonDetailsCard/colorfulTags/colorfulTag';
 
-
+interface EggGroup {
+  name: string;
+}
 
 interface TypeData {
   damage_relations: {
@@ -38,7 +41,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
   const [isDetailLoading, setLoading] = useState<boolean>(true);
   const [isModalOpen, setCloseModal] = useState<boolean>(isCardSelected);
   const [pokemonSpeciesData, setPokemonSpeciesData] = useState();
-  const [pokemonTypeData, setPokemonTypeData] = useState<TypeData | null>(null);
+  const [pokemonTypeData, setPokemonTypeData] = useState<PokemonTypeData>();
 
   const handleClose = () => toggleModal();
 
@@ -60,16 +63,21 @@ const DetailPage: React.FC<DetailPageProps> = ({
   }, [currentPokemonId]);
 
   const handleForwordClick = () => {
-    if (currentPokemonId === offset) return;
-    setCurrentPokemonId((prev) => prev + 1);
+    if (currentPokemonId < offset) {
+      setCurrentPokemonId((prev) => prev + 1);
+    }
   };
 
   const handleBackwordClick = () => {
-    if (currentPokemonId === 1) return;
-    setCurrentPokemonId((prev) => prev - 1);
+    if (currentPokemonId > 1) {
+      setCurrentPokemonId((prev) => prev - 1);
+    }
   };
 
-  const closePopUp = () => {setCloseModal(false);handleClose()};
+  const closePopUp = () => {
+    setCloseModal(false);
+    handleClose();
+  };
 
   return (
     <Modal
@@ -85,15 +93,13 @@ const DetailPage: React.FC<DetailPageProps> = ({
             {isDetailLoading ? (
               <Placeholder.Paragraph style={{ marginTop: 30 }} rows={5} graph="image" active />
             ) : (
-              <div>
-                <DetailsHeader
-                  data={data}
-                  speciesData={pokemonSpeciesData}
-                  forwordClick={handleForwordClick}
-                  backClick={handleBackwordClick}
-                  closeClick={closePopUp}
-                />
-              </div>
+              <DetailsHeader
+                data={data}
+                speciesData={pokemonSpeciesData}
+                forwordClick={handleForwordClick}
+                backClick={handleBackwordClick}
+                closeClick={closePopUp}
+              />
             )}
             <div className="padding-components">
               {pokemonTypeData && pokemonSpeciesData && (
@@ -111,7 +117,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
               <EvolutionChainCard data={data} />
             </div>
           </Modal.Header>
-          <Modal.Body>{/* Placeholder for future content */}</Modal.Body>
+          <Modal.Body />
         </div>
       ) : (
         <div style={{ textAlign: 'center' }}>
