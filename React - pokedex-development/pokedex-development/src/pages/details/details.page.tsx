@@ -11,17 +11,7 @@ import PropertyCard, { PokemonTypeData } from '../../components/pokemonDetailsCa
 import StatCard from '../../components/pokemonDetailsCard/statCard/statCard';
 import EvolutionChainCard from '../../components/pokemonDetailsCard/evolutionChainCard/evolutionChainCard';
 import { PokemonCardData } from '../../components/pokemonCard/pokemonCard';
-import { ColorfulTagProps } from '../../components/pokemonDetailsCard/colorfulTags/colorfulTag';
 
-interface EggGroup {
-  name: string;
-}
-
-interface TypeData {
-  damage_relations: {
-    double_damage_from: Array<{ name: string }>;
-  };
-}
 
 interface DetailPageProps {
   isCardSelected: boolean;

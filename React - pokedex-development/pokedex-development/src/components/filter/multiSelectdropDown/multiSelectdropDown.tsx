@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckPicker, CheckPickerProps } from 'rsuite';
+import { CheckPicker } from 'rsuite';
 import './multiSelectdropDown.scss';
 
 export interface DropdownOption {
