@@ -3,7 +3,6 @@ import { Grid, Row, Col } from 'rsuite';
 import { getCamleCaseString } from '../../../constants/pokemon.types';
 import './statCard.scss';
 
-// Define the shape of each stat item
 interface StatItem {
   base_stat: number;
   stat: {
@@ -15,52 +14,57 @@ interface StatCardProps {
   stats: StatItem[];
 }
 
-const StatCard: React.FC<StatCardProps> = ({ stats }) => {
+const StatCard = ({ stats }: StatCardProps): JSX.Element => {
   const getStatHeading = (name: string): string => {
     if (name === 'hp') {
       return 'HP';
-    } else {
-      const [firstName, lastName] = name.split('-');
-      if (firstName === 'special' && lastName) {
-        return 'Sp. ' + getCamleCaseString(lastName);
-      }
-      return getCamleCaseString(firstName);
     }
+
+    const [firstName, lastName] = name.split('-');
+
+    if (firstName === 'special' && lastName) {
+      return `Sp. ${getCamleCaseString(lastName)}`;
+    }
+
+    return getCamleCaseString(firstName);
   };
 
   return (
-    <div className="stat-container">
+    <section className="stat-container" aria-label="Pokemon stats">
       <div className="stat-card">
-        <div>
-          <span className="stat-header">Stats</span>
-        </div>
-        <div>
-          <Grid fluid>
-            <Row className="show-grid">
-              {stats?.map((item) => (
-                <Col key={item.stat.name} className="pl-0 pt-1" lg={12} xl={12} xs={24} sm={24}>
-                  <div className="stat-flex-row">
-                    <Col xs={4} lg={8} xl={8} className="pl-0 pr-0">
-                      <div>
-                        <span className="prop-header">{getStatHeading(item.stat.name)}</span>
-                      </div>
-                    </Col>
-                    <Col xs={8} lg={10} xl={10} className="pl-0 pr-0">
-                      <div className="prop-header-data">
-                        <span className="stat-data">{item.base_stat}</span>
-                        <progress value={item.base_stat} max={100}>
-                          {item.base_stat}
-                        </progress>
-                      </div>
-                    </Col>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-          </Grid>
-        </div>
+        <header>
+          <h2 className="stat-header">Stats</h2>
+        </header>
+        <Grid fluid>
+          <Row className="show-grid">
+            {stats?.map(({ base_stat, stat: { name } }) => (
+              <Col
+                key={name}
+                className="pl-0 pt-1"
+                lg={12}
+                xl={12}
+                xs={24}
+                sm={24}
+              >
+                <div className="stat-flex-row">
+                  <Col xs={4} lg={8} xl={8} className="pl-0 pr-0">
+                    <span className="prop-header">{getStatHeading(name)}</span>
+                  </Col>
+                  <Col xs={8} lg={10} xl={10} className="pl-0 pr-0">
+                    <div className="prop-header-data">
+                      <span className="stat-data">{base_stat}</span>
+                      <progress value={base_stat} max={100}>
+                        {base_stat}
+                      </progress>
+                    </div>
+                  </Col>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </Grid>
       </div>
-    </div>
+    </section>
   );
 };
 

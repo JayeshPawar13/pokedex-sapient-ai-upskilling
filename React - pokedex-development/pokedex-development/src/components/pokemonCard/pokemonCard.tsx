@@ -1,10 +1,6 @@
-
-import React from 'react';
-import { getBackground, PokemonType } from "../../constants/pokemon.types";
-import { numberFormation } from "../../services/common.service";
-import "./pokemonCard.scss";
-
-// Remove local PokemonType declaration and use the one from constants/pokemon.types
+import { getBackground, PokemonType } from '../../constants/pokemon.types';
+import { numberFormation } from '../../services/common.service';
+import './pokemonCard.scss';
 
 export interface PokemonSprites {
   other?: {
@@ -25,8 +21,7 @@ export interface PokemonCardData {
     stat: {
       name: string;
     };
-  }[]; // Optional stats field
-  // add more fields as needed
+  }[];
 }
 
 export interface PokemonCardProps {
@@ -35,27 +30,45 @@ export interface PokemonCardProps {
   className?: string;
 }
 
+const PokemonCard = ({
+  data,
+  onClick,
+  className = '',
+}: PokemonCardProps): JSX.Element => {
+  const backgroundStyle = { background: getBackground(data.types) };
 
-const PokemonCard: React.FC<PokemonCardProps> = ({ data, onClick, className }) => {
-    return (
-        <>
-            <div className={`${className} card`} onClick={onClick} role="presentation" style={{
-                background: getBackground(data.types)
-            }}>
-                <div className="image-container">
-                    <img src={
-                        data.sprites.other?.dream_world?.front_default ||
-                        data.sprites.front_default || "https://via.placeholder.com/150"
-                    } alt="Avatar" />
-                </div>
-                <div className="text-container">
-                    <strong><b>{data.name}</b></strong>
-                    <span>{numberFormation(data.id)}</span>
-                </div>
-            </div>
-        </>
-    )
-}
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      onClick();
+    }
+  };
 
+  return (
+    <div
+      className={`${className} card`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyUp={onClick ? handleKeyPress : undefined}
+      style={backgroundStyle}
+    >
+      <div className="image-container">
+        <img
+          src={
+            data.sprites.other?.dream_world?.front_default ||
+            data.sprites.front_default ||
+            'https://via.placeholder.com/150'
+          }
+          alt={data.name}
+        />
+      </div>
+      <div className="text-container">
+        <strong>{data.name}</strong>
+        <span>{numberFormation(data.id)}</span>
+      </div>
+    </div>
+  );
+};
 
 export default PokemonCard;

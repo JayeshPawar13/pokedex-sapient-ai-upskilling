@@ -44,21 +44,32 @@ interface PropertyCardProps {
   pokemonTypeData: PokemonTypeData;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ speciesData, data, pokemonTypeData }) => {
+const PropertyCard = ({
+  speciesData,
+  data,
+  pokemonTypeData,
+}: PropertyCardProps): JSX.Element => {
   const eggGroups = speciesData?.egg_groups ?? [];
   const abilities = data?.abilities ?? [];
   const types = data?.types ?? [];
   const weaknesses = pokemonTypeData?.damage_relations?.double_damage_from ?? [];
 
-  const renderList = (list: any[], extractor: (item: any) => string) =>
-    list.length > 0
-      ? list.map((item, index) => (
+  const renderList = <T,>(
+    list: T[],
+    extractor: (item: T) => string,
+  ): JSX.Element =>
+    list.length > 0 ? (
+      <>
+        {list.map((item, index) => (
           <span key={extractor(item)} className="prop-header-data">
             {getCamleCaseString(extractor(item))}
             {index !== list.length - 1 && ', '}
           </span>
-        ))
-      : <span className="prop-header-data">Unknown</span>;
+        ))}
+      </>
+    ) : (
+      <span className="prop-header-data">Unknown</span>
+    );
 
   return (
     <div className="property-container">
@@ -66,14 +77,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ speciesData, data, pokemonT
         <Row className="show-grid">
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Height</span></div>
+              <div>
+                <span className="prop-header">Height</span>
+              </div>
               <div className="prop-header-data">{data?.height ?? '-'}</div>
             </div>
           </Col>
 
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Weight</span></div>
+              <div>
+                <span className="prop-header">Weight</span>
+              </div>
               <div className="prop-header-data">
                 {data?.weight ? `${data.weight / 10} Kg` : '-'}
               </div>
@@ -82,15 +97,19 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ speciesData, data, pokemonT
 
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Gender(s)</span></div>
+              <div>
+                <span className="prop-header">Gender(s)</span>
+              </div>
               <div className="prop-header-data">Male, Female</div>
             </div>
           </Col>
 
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Egg Groups</span></div>
-              {renderList(eggGroups, item => item.name)}
+              <div>
+                <span className="prop-header">Egg Groups</span>
+              </div>
+              {renderList(eggGroups, (item) => item.name)}
             </div>
           </Col>
         </Row>
@@ -98,14 +117,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ speciesData, data, pokemonT
         <Row className="show-grid pt-3">
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Abilities</span></div>
-              {renderList(abilities, item => item.ability.name)}
+              <div>
+                <span className="prop-header">Abilities</span>
+              </div>
+              {renderList(abilities, (item) => item.ability.name)}
             </div>
           </Col>
 
           <Col xs={12} sm={12} lg={6} xl={6}>
             <div className="flex-col">
-              <div><span className="prop-header">Types</span></div>
+              <div>
+                <span className="prop-header">Types</span>
+              </div>
               <div className="prop-header-data type-wrap">
                 {types.length > 0 ? (
                   types.map((item, index) => (
@@ -125,7 +148,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ speciesData, data, pokemonT
 
           <Col xs={12} sm={12} lg={12} xl={12}>
             <div className="flex-col">
-              <div><span className="prop-header">Weak Against</span></div>
+              <div>
+                <span className="prop-header">Weak Against</span>
+              </div>
               <div className="prop-header-data type-wrap">
                 {weaknesses.length > 0 ? (
                   weaknesses.map((item, index) => (

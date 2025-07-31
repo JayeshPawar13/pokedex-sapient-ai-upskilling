@@ -1,4 +1,4 @@
-import React from 'react';
+import type { SyntheticEvent } from 'react';
 import { CheckPicker } from 'rsuite';
 import './multiSelectdropDown.scss';
 
@@ -9,8 +9,8 @@ export interface DropdownOption {
 }
 
 export interface AppMultiSelectDropDownProps {
-  label?: React.ReactNode;
-  onChangeHandler?: (value: (string | number)[], event?: React.SyntheticEvent) => void;
+  label?: JSX.Element | string;
+  onChangeHandler?: (value: (string | number)[], event: SyntheticEvent) => void;
   data?: DropdownOption[];
   placeholder?: string;
   isOpen?: boolean;
@@ -19,7 +19,7 @@ export interface AppMultiSelectDropDownProps {
   onOpenHandler?: () => void;
 }
 
-const AppMultiSelectDropDown: React.FC<AppMultiSelectDropDownProps> = ({
+const AppMultiSelectDropDown = ({
   label,
   onChangeHandler,
   data = [],
@@ -28,7 +28,7 @@ const AppMultiSelectDropDown: React.FC<AppMultiSelectDropDownProps> = ({
   onCloseHandler,
   onCleanHandler,
   onOpenHandler,
-}) => (
+}: AppMultiSelectDropDownProps) => (
   <div className="multiselect-dropdown-wrapper">
     {label && (
       <div className="dropdown-label">

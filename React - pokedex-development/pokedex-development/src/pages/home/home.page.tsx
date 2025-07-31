@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useCallback } from 'react';
 import Header from '../../components/header/header';
 import './home.scss';
 import '../../styles/common.scss';
@@ -9,7 +9,6 @@ import DetailPage from '../details/details.page';
 import { Button, Col, Row } from 'rsuite';
 import AppFilter from '../../components/filter/filter';
 
-// Define context shape
 interface PokemonContextType {
   state: {
     pokemonsList: PokemonCardData[];
@@ -20,15 +19,15 @@ interface PokemonContextType {
 }
 
 const HomePage: React.FC = () => {
-  const [isCardSelected, setToggleSelect] = useState(false);
-  const [pokemonId, setPokemonId] = useState<number>();
+  const [isCardSelected, setIsCardSelected] = useState(false);
+  const [pokemonId, setPokemonId] = useState<number | undefined>(undefined);
   const [isFilterEnable, setIsFilterEnable] = useState(false);
 
   const { state, getPokemonData } = useContext(PokemonContext) as PokemonContextType;
-  const { pokemonsList, isLoading, isLoadMoreInprogress } = state;
+  const { pokemonsList = [], isLoading, isLoadMoreInprogress } = state;
 
   const pokemonsListView = useMemo(() => {
-    const uniquePokemons = pokemonsList?.filter(
+    const uniquePokemons = pokemonsList.filter(
       (pokemon, index, self) =>
         index === self.findIndex((p) => p.id === pokemon.id)
     );
@@ -46,17 +45,17 @@ const HomePage: React.FC = () => {
     ));
   }, [pokemonsList]);
 
-  const handleLoadMoreClick = () => {
+  const handleLoadMoreClick = useCallback(() => {
     getPokemonData();
-  };
+  }, [getPokemonData]);
 
-  const toggleModal = () => {
-    setToggleSelect((prev) => !prev);
-  };
+  const toggleModal = useCallback(() => {
+    setIsCardSelected((prev) => !prev);
+  }, []);
 
-  const isFilterEnableHandler = (isEnable: boolean) => {
+  const isFilterEnableHandler = useCallback((isEnable: boolean) => {
     setIsFilterEnable(isEnable);
-  };
+  }, []);
 
   return (
     <div className="home-container">

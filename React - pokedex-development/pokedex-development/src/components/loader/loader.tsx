@@ -1,20 +1,13 @@
-
-import React from 'react';
-import { Loader } from "rsuite";
+import { Loader } from 'rsuite';
 
 export interface ApploaderProps {
   className?: string;
 }
 
-
-const Apploader: React.FC<ApploaderProps> = ({ className }) => {
-    return (
-        <>
-            <div className={className}>
-                <Loader size="md" content="Loading..." />
-            </div>
-        </>
-    )
-}
+const Apploader = ({ className }: ApploaderProps): JSX.Element => (
+  <div className={className}>
+    <Loader size="md" content="Loading..." />
+  </div>
+);
 
 export default Apploader;
