@@ -1,12 +1,17 @@
-
-import React from 'react';
+import type { SyntheticEvent } from 'react';
 import { CheckPicker } from 'rsuite';
-import "./multiSelectdropDown.scss";
+import './multiSelectdropDown.scss';
+
+export interface DropdownOption {
+  label: string;
+  value: string | number;
+  [key: string]: unknown;
+}
 
 export interface AppMultiSelectDropDownProps {
-  label?: React.ReactNode;
-  onChangeHandler?: (value: any, event?: React.SyntheticEvent) => void;
-  data?: any[];
+  label?: JSX.Element | string;
+  onChangeHandler?: (value: (string | number)[], event: SyntheticEvent) => void;
+  data?: DropdownOption[];
   placeholder?: string;
   isOpen?: boolean;
   onCloseHandler?: () => void;
@@ -14,28 +19,37 @@ export interface AppMultiSelectDropDownProps {
   onOpenHandler?: () => void;
 }
 
-
-const AppMultiSelectDropDown: React.FC<AppMultiSelectDropDownProps> = ({ label, onChangeHandler, data, placeholder, isOpen, onCloseHandler, onCleanHandler, onOpenHandler }) => (
-  <>
-    <div className="multiselect-dropdown-wrapper">
-      <div className='dropdown-label'><span>{label}</span></div>
-      <div className={`${isOpen ? "is-dropdown-open" : ""} check-picker-wrap`}>
-        <CheckPicker
-          block
-          placeholder={placeholder}
-          onChange={onChangeHandler}
-          size="lg"
-          onOpen={onOpenHandler}
-          onClose={onCloseHandler}
-          onClean={onCleanHandler}
-          data={data ?? []}
-          searchable={false}
-          style={{ width: 224 }}
-        />
+const AppMultiSelectDropDown = ({
+  label,
+  onChangeHandler,
+  data = [],
+  placeholder,
+  isOpen = false,
+  onCloseHandler,
+  onCleanHandler,
+  onOpenHandler,
+}: AppMultiSelectDropDownProps) => (
+  <div className="multiselect-dropdown-wrapper">
+    {label && (
+      <div className="dropdown-label">
+        <span>{label}</span>
       </div>
+    )}
+    <div className={`${isOpen ? 'is-dropdown-open' : ''} check-picker-wrap`}>
+      <CheckPicker
+        block
+        size="lg"
+        placeholder={placeholder}
+        data={data}
+        onChange={onChangeHandler}
+        onOpen={onOpenHandler}
+        onClose={onCloseHandler}
+        onClean={onCleanHandler}
+        searchable={false}
+        style={{ width: 224 }}
+      />
     </div>
-  </>
+  </div>
 );
-
 
 export default AppMultiSelectDropDown;
