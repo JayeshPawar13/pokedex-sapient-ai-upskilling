@@ -81,30 +81,38 @@ export const POKEMON_TYPE = Object.freeze({
     }
 })
 
-export const getPokcolor = (type) => {
+export const getPokcolor = (type: keyof typeof POKEMON_TYPE) => {
     return POKEMON_TYPE[type] ? POKEMON_TYPE[type].color : POKEMON_TYPE['unknown'].color;
 }
 
-export const getBackground = (pokemonTypes) => {
-    var color = "";
+export interface PokemonType {
+    type: { name: keyof typeof POKEMON_TYPE };
+}
+
+export const getBackground = (pokemonTypes: PokemonType[]) => {
+    let color = "";
     if (pokemonTypes.length) {
-        var { type: { name: pokemontype1 } } = pokemonTypes[0];
-    }
-    if (pokemonTypes.length > 1) {
-        const { type: { name: pokemontype2 } } = pokemonTypes[1];
-        color = `linear-gradient(180deg, ${getPokcolor(pokemontype1)} 0%, ${getPokcolor(pokemontype2)} 100%)`;
-    } else {
         const { type: { name: pokemontype1 } } = pokemonTypes[0];
-        color = getPokcolor(pokemontype1)
+        if (pokemonTypes.length > 1) {
+            const { type: { name: pokemontype2 } } = pokemonTypes[1];
+            color = `linear-gradient(180deg, ${getPokcolor(pokemontype1)} 0%, ${getPokcolor(pokemontype2)} 100%)`;
+        } else {
+            color = getPokcolor(pokemontype1);
+        }
     }
     return color;
 }
 
 
-export const getPokemonDescription = (data = []) => {
+export interface PokemonFlavorText {
+    language: { name: string };
+    flavor_text: string;
+}
+
+export const getPokemonDescription = (data: PokemonFlavorText[] = []) => {
     if (data.length) {
-        let uniqueTextArray = [];
-        return data.reduce((acc, next) => {
+        const uniqueTextArray: string[] = [];
+        return data.reduce((acc: string, next: PokemonFlavorText) => {
             if (next.language.name === "en" && !uniqueTextArray.includes(next.flavor_text)) {
                 uniqueTextArray.push(next.flavor_text);
                 return acc += next.flavor_text.replace(/\n|\f/g, " ");
@@ -112,6 +120,7 @@ export const getPokemonDescription = (data = []) => {
             return acc;
         }, "");
     }
+    return "";
 }
 
 export const getCamleCaseString = (str = "") => {

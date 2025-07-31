@@ -1,9 +1,14 @@
+
 import React from 'react';
 import "./header.scss";
-import PropTypes from 'prop-types';
+
+export interface HeaderProps {
+  children?: React.ReactNode;
+}
 
 
-const Header = ({ children }) => {
+
+const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
     <header className="header">
       {children}
@@ -11,8 +16,5 @@ const Header = ({ children }) => {
   );
 };
 
-Header.propTypes = {
-  children: PropTypes.any
-}
 
 export default Header;

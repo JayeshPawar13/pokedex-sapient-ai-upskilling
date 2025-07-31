@@ -1,10 +1,11 @@
+// File: tooltip.tsx
+// Path: src/hooks/tooltip/tooltip.tsx
+
 import React from 'react';
 import { forwardRef } from 'react';
 import { Whisper, Popover } from 'rsuite';
 import PropTypes from 'prop-types';
 
-
-// eslint-disable-next-line react/display-name
 interface DefaultPopoverProps {
     content: React.ReactNode;
     className?: string;
@@ -18,6 +19,9 @@ const DefaultPopover = forwardRef<HTMLDivElement, DefaultPopoverProps>(({ conten
         </Popover>
     );
 });
+
+// Set display name for better debugging and readability
+DefaultPopover.displayName = 'DefaultPopover';
 
 interface AppTooltipProps {
     placement: any;
@@ -39,19 +43,18 @@ const AppTooltip: React.FC<AppTooltipProps> = ({ placement, data, className, nam
         <div className={className}>{name}</div>
     </Whisper>
 );
+
 AppTooltip.propTypes = {
     placement: PropTypes.string,
     data: PropTypes.any,
     className: PropTypes.string,
     name: PropTypes.string,
     tooltipClass: PropTypes.string
-
 }
 
 DefaultPopover.propTypes = {
     content: PropTypes.any,
     className: PropTypes.string
 }
-
 
 export default AppTooltip;

@@ -1,11 +1,15 @@
+
 import React from 'react';
-import { getPokcolor } from '../../../constants/pokemon.types';
+import { getPokcolor, POKEMON_TYPE } from '../../../constants/pokemon.types';
 import "./colorfulTags.scss";
-import PropTypes from 'prop-types';
 
-const ColorfulTag = ({ text, className, type }) => {
+export interface ColorfulTagProps {
+  text: string;
+  className?: string;
+  type: keyof typeof POKEMON_TYPE;
+}
 
-
+const ColorfulTag: React.FC<ColorfulTagProps> = ({ text, className, type }) => {
     return (
         <div>
             <div className={className}>
@@ -15,11 +19,6 @@ const ColorfulTag = ({ text, className, type }) => {
             </div>
         </div>
     )
-}
-ColorfulTag.propTypes = {
-    text: PropTypes.string,
-    className: PropTypes.string,
-    type: PropTypes.any
 }
 
 export default ColorfulTag;
