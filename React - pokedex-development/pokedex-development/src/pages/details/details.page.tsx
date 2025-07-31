@@ -69,7 +69,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
     setCurrentPokemonId((prev) => prev - 1);
   };
 
-  const closePopUp = () => setCloseModal(false);
+  const closePopUp = () => {setCloseModal(false);handleClose()};
 
   return (
     <Modal
