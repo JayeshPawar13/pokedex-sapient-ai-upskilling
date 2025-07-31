@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, SyntheticEvent } from 'react';
 import { Col, Row } from 'rsuite';
 import { debounceTime, distinctUntilChanged, map, of } from 'rxjs';
 import { baseURL, SEARCH_SLICED } from '../../constants/apiUrls';
@@ -13,6 +13,8 @@ import {
 import './filter.scss';
 import AppMultiSelectDropDown, { DropdownOption } from './multiSelectdropDown/multiSelectdropDown';
 import SearchFilter from './search/search.filter';
+import {  PokemonCardData } from '../../components/pokemonCard/pokemonCard';
+import { NamedResource } from '../../store/reducers/reducer';
 
 export interface AppFilterProps {
     isFilterEnable: (enable: boolean) => void;
@@ -21,38 +23,41 @@ export interface AppFilterProps {
 const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
     const context = useContext(PokemonContext);
     const state = context?.state ?? {};
-    const { allPokemonsList = [], pokemonsTypes = [], pokemonGenderList = [] } = state as Record<string, unknown>;
+    const { allPokemonsList = [], pokemonsTypes = [], pokemonGenderList = [] } = state as {
+        allPokemonsList: NamedResource[];
+        pokemonsTypes: DropdownOption[];
+        pokemonGenderList: DropdownOption[];
+    };
     const { getPokemonData, dispatch, setAppLoading, getPokemonDetailsListByUrl } = context || {};
 
     const [isOpenTypeFilter, setIsOpenTypeFilter] = useState(false);
     const [isOpenGenderFilter, setIsOpenGenderFilter] = useState(false);
 
-    let data$ = of<any[]>([]);
+    let data$ = of<NamedResource[]>([]);
 
-    const handleSearchChange = (value: string, event: any) => {
-        event.preventDefault();
+    const handleSearchChange = (value: string, event?: SyntheticEvent) => {
+        event?.preventDefault();
         const trimmedValue = value.trim();
         setAppLoading?.(true);
 
         if (trimmedValue.length) {
             isFilterEnable(true);
-            data$ = of(allPokemonsList as any[]).pipe(
+            data$ = of(allPokemonsList).pipe(
                 debounceTime(4000),
                 distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
                 map((pokemons) =>
-                    pokemons.filter((item: any) =>
+                    pokemons.filter((item) =>
                         item.name.toLowerCase().includes(trimmedValue.toLowerCase())
                     )
                 )
             );
-
         } else {
             filterPokemonData([]);
             getPokemonData?.(true);
             isFilterEnable(false);
         }
 
-        data$.subscribe((pokemonList: any[]) => {
+        data$.subscribe((pokemonList: NamedResource[]) => {
             if (pokemonList.length > SEARCH_SLICED) {
                 pokemonList = pokemonList.slice(0, SEARCH_SLICED);
             }
@@ -62,8 +67,8 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
         setAppLoading?.(false);
     };
 
-    const handleTypeChange = (value: any[], event: any) => {
-        event.preventDefault();
+    const handleTypeChange = (value: (string | number)[], event?: React.SyntheticEvent) => {
+        event?.preventDefault();
         if (!value.length) {
             filterPokemonData([]);
             getPokemonData?.(true);
@@ -72,10 +77,10 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
         }
 
         isFilterEnable(true);
-        getAllParallelCall(value)
-            .then((pokemonList: any[]) => {
+        getAllParallelCall(value as string[])
+            .then((pokemonList: { pokemon: { pokemon: NamedResource }[] }[]) => {
                 const uniqueList = removeDuplicateBy(
-                    pokemonList.flatMap((res: any) => res.pokemon).map((res: any) => res.pokemon),
+                    pokemonList.flatMap((res) => res.pokemon).map((res) => res.pokemon),
                     'name'
                 );
 
@@ -85,12 +90,11 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
                         : uniqueList;
 
                 getPokemonDetailsListByUrl?.(slicedList).then(filterPokemonData);
-            })
-            
+            });
     };
 
-    const handleGenderChange = (value: any[], event: any) => {
-        event.preventDefault();
+    const handleGenderChange = (value: (string | number)[], event?: SyntheticEvent) => {
+        event?.preventDefault();
         if (!value.length) {
             filterPokemonData([]);
             getPokemonData?.(true);
@@ -99,11 +103,11 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
         }
 
         isFilterEnable(true);
-        getAllParallelCall(value)
-            .then((pokemonList: any[]) => {
+        getAllParallelCall(value as string[])
+            .then((pokemonList: { pokemon_species_details: { pokemon_species: NamedResource }[] }[]) => {
                 let urls = pokemonList
-                    .flatMap((res: any) => res.pokemon_species_details)
-                    .map((res: any) => `${baseURL}/pokemon${res.pokemon_species.url.split('pokemon-species')[1]}`);
+                    .flatMap((res) => res.pokemon_species_details)
+                    .map((res) => `${baseURL}/pokemon${res.pokemon_species.url.split('pokemon-species')[1]}`);
 
                 urls = Array.from(new Set(urls));
 
@@ -112,49 +116,43 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
                         ? [...urls.slice(0, SEARCH_SLICED), ...urls.slice(-SEARCH_SLICED)]
                         : urls;
 
-                const formattedUrls = slicedUrls.map((url) => ({ url }));
+                const formattedUrls: NamedResource[] = slicedUrls.map((url) => ({ name: '', url }));
 
                 getPokemonDetailsListByUrl?.(formattedUrls).then(filterPokemonData);
-            })
-           
+            });
     };
 
-    const filterPokemonData = (data: any[]) => {
+    const filterPokemonData = (data: PokemonCardData[]) => {
         dispatch?.({ type: 'ACTIONS.SET_FILTERED_POKEMON_LIST', payload: data });
     };
 
-    const setPokemonTypes = (data: any[]) => {
-        const payload = data.length
-            ? data.map((item: any) => ({
-                label: getCamleCaseString(item.name),
-                value: item.url,
-                url: item.url,
-            }))
+    const setPokemonTypes = (data: NamedResource[]) => {
+        const payload: DropdownOption[] = data.length
+            ? data.map((item) => ({
+                  label: getCamleCaseString(item.name),
+                  value: item.url,
+                  url: item.url,
+              }))
             : [];
 
         dispatch?.({ type: 'ACTIONS.SET_POKEMON_TYPE', payload });
     };
 
-    const setPokemonGendersList = (data: any[]) => {
-        const payload = data.length
-            ? data.map((item: any) => ({
-                label: getCamleCaseString(item.name),
-                value: item.url,
-                url: item.url,
-            }))
+    const setPokemonGendersList = (data: NamedResource[]) => {
+        const payload: DropdownOption[] = data.length
+            ? data.map((item) => ({
+                  label: getCamleCaseString(item.name),
+                  value: item.url,
+                  url: item.url,
+              }))
             : [];
 
         dispatch?.({ type: 'ACTIONS.SET_POKEMON_GENDER_LIST', payload });
     };
 
     useEffect(() => {
-        getPokemonTypes()
-            .then((res) => setPokemonTypes(res.results))
-            
-
-        getPokemonGenders()
-            .then((res) => setPokemonGendersList(res.results))
-            
+        getPokemonTypes().then((res) => setPokemonTypes(res.results));
+        getPokemonGenders().then((res) => setPokemonGendersList(res.results));
     }, []);
 
     return (
@@ -173,7 +171,7 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
                         <AppMultiSelectDropDown
                             placeholder="Select Types"
                             isOpen={isOpenTypeFilter}
-                            data={pokemonsTypes as DropdownOption[] | undefined}
+                            data={pokemonsTypes}
                             label="Type"
                             onChangeHandler={handleTypeChange}
                             onOpenHandler={() => setIsOpenTypeFilter(true)}
@@ -185,7 +183,7 @@ const AppFilter: React.FC<AppFilterProps> = ({ isFilterEnable }) => {
                         <AppMultiSelectDropDown
                             placeholder="Select Gender"
                             isOpen={isOpenGenderFilter}
-                            data={pokemonGenderList as DropdownOption[] | undefined}
+                            data={pokemonGenderList}
                             label="Gender"
                             onChangeHandler={handleGenderChange}
                             onOpenHandler={() => setIsOpenGenderFilter(true)}
