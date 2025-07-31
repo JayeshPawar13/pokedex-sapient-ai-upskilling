@@ -6,13 +6,15 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:jsx-a11y/recommended"
+        "plugin:jsx-a11y/recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "settings": {
         "react":{
             "version":"detect"
         }
     },
+    "parser": "@typescript-eslint/parser",
     "overrides": [
         {
             "files":["**/*.test.js","**/*.test.jsx"],
@@ -28,7 +30,8 @@
     "plugins": [
         "react",
         "jsx-a11y",
-        "testing-library"
+        "testing-library",
+        "@typescript-eslint"
     ],
     "rules": {
         // "react/react-in-jsx-scope":"off",

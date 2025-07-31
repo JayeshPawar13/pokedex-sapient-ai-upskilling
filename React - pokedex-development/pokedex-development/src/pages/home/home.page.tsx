@@ -4,7 +4,7 @@ import "./home.scss";
 import "../../styles/common.scss";
 import PokemonCard from "../../components/pokemonCard/pokemonCard";
 import Apploader from "../../components/loader/loader";
-import PokemonContext from "../../context/pokemonContext/pokmon.context";
+import PokemonContext from "../../context/pokemonContext/pokemon.context";
 import DetailPage from "../details/details.page";
 import { Button, Col, Row } from "rsuite";
 import AppFilter from "../../components/filter/filter";

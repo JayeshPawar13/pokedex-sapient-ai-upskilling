@@ -1,7 +1,7 @@
 import React from 'react';
 import { useReducer, useEffect, useRef } from "react";
 import { initialState, reducer } from "../../store/reducers/reducer";
-import PokemonContext from "./pokmon.context";
+import PokemonContext from "./pokemon.context";
 import PropTypes from 'prop-types';
 // import * as ACTIONS from "../../store/actions/pokemonAction";
 import {
@@ -9,9 +9,9 @@ import {
     initialURL
 } from "../../services/common.service";
 
-export const PokemonProvider = ({ children }) => {
+const PokemonProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    var batchURL = useRef(initialURL);
+    const batchURL = useRef(initialURL);
     const setAppLoading = (loading) => {
         dispatch({
             type: "ACTIONS.SET_API_CALL_INPROGRESS",
@@ -90,3 +90,5 @@ export const PokemonProvider = ({ children }) => {
 PokemonProvider.propTypes = {
     children: PropTypes.any,
 }
+
+export default PokemonProvider;
