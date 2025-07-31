@@ -14,23 +14,25 @@ function App() {
 
     <>
       <main>
-      <PokemonProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path={ROUTES.HOME} element={
-              <Suspense fallback={<div>Loading</div>}>
-              <HomePage />
-              </Suspense>
-            }
-            />
-            <Route path={ROUTES.DETAILS} element={
-              <Suspense fallback={<div>Loading</div>}>
-                {/* <DetailPage /> */}
-              </Suspense>
-            }
-            />
-          </Routes>
-        </BrowserRouter>
+        <PokemonProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path={ROUTES.HOME} element={
+                <Suspense fallback={<div>Loading</div>}>
+                  <HomePage />
+                </Suspense>
+              }
+              />
+              <Route
+                path={ROUTES.DETAILS}
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    {/* <DetailPage /> */}
+                  </Suspense>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
         </PokemonProvider>
       </main>
     </>
